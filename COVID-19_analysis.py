@@ -1,7 +1,24 @@
+"""
+Template for the COMP1730/6730 project assignment, S2 2021.
+The assignment specification is available on the course web
+site, at https://cs.anu.edu.au/courses/comp1730/assessment/project/
+
+
+The assignment is due 25/10/2021 at 9:00 am, Canberra time
+
+Collaborators: <list the UIDs of ALL members of your project group here>
+ANU ID: u7374681  Name: Jiayong Zhu
+ANU ID: u7352166  Name: Qiya Zhou
+ANU ID: u7346505  Name: Jiamin Rui 
+"""
 import datetime
 import os
 import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.pyplot import cm
 
+os.chdir('C:\\Users\\Administrator\\Desktop\\COMP6730\\covid-data')
 def analyse(path_to_files):
     '''
     print the results of each question by dealing with the covid-data from csv files
@@ -20,7 +37,6 @@ def analyse(path_to_files):
           f"Most recent data is in file `{recent_data_file_name}`")
     recent_sorted_records = pd.read_csv(path_to_files +'//'+ recent_data_file_name).sort_values("Last_Update",
                                                                                                 ascending=False)
-    print(type(recent_sorted_records))
     # In the last updated date file, sort the column of "Last_Update" from big to small.
     last_updated = recent_sorted_records["Last_Update"][0]
     print(f"Last updated at {last_updated}")
@@ -47,7 +63,23 @@ def analyse(path_to_files):
     for i in range(10):
         print(f"{answers2a.index[i]} - total cases: {answers2a['Confirmed'][i]} deaths: {answers2a['Deaths'][i]}"
               f" new: {answers2a['Confirmed'][i] - last_2_records['Confirmed'][answers2a.index[i]]}"f"  active: {answers2a['Confirmed'][i]-answers2a['Deaths'][i]-round(answers2a['Confirmed'][i]*recovery[i])}")
-
+    x_pos = np.arange(10)
+    y_pos = answers2a['Confirmed'].to_list()
+    plt.subplot(221)
+    plt.bar(answers2a.index[:10],answers2a['Confirmed'][:10],color = cm.rainbow(np.linspace(0, 1, 10)),align = 'center',alpha = 1)
+    plt.xlabel("Top10 country")
+    plt.ylabel("Total cases")
+    plt.subplot(222)
+    plt.bar(answers2a.index[:10],answers2a['Deaths'][:10],color = cm.rainbow(np.linspace(0, 1, 10)),align = 'center',alpha = 1)
+    plt.xlabel("Top10 country")
+    plt.ylabel("Total deaths")
+    plt.subplot(223)
+    plt.bar(answers2a.index[:10],answers2a['Confirmed'][:10]-answers2a['Deaths'][:10]-round(answers2a['Confirmed'][:10]*recovery[:10]),color = cm.rainbow(np.linspace(0, 1, 10)),align = 'center',alpha = 1)
+    plt.xlabel("Top10 country")
+    plt.ylabel("Total active")
+    # plt.xticks(x_pos,answers2a.index[i])
+    plt.show()
+    print(answers2a)
     # question 3
     # load all records
     # In the Q3, there are some datas before the date 2021-08-17 and we also take them into consideration and print them
